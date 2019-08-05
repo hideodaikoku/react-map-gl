@@ -91,7 +91,9 @@ export default class TransitionManager {
 
     if (this._isTransitionEnabled(nextProps)) {
       const startProps = Object.assign({}, currentProps);
-      const endProps = Object.assign({}, nextProps);
+
+      // update transitionDuration for `auto` mode
+      const endProps = this._normalizeNextProps(nextProps, currentProps);
 
       if (this._isTransitionInProgress()) {
         currentProps.onTransitionInterrupt();
@@ -132,7 +134,12 @@ export default class TransitionManager {
   }
 
   _isTransitionEnabled(props: ViewportProps): boolean {
-    return props.transitionDuration > 0 && Boolean(props.transitionInterpolator);
+    const {transitionDuration} = props;
+    return (
+      (transitionDuration > 0 ||
+        (typeof transitionDuration === 'string' && transitionDuration.toLowerCase() === 'auto')) &&
+      Boolean(props.transitionInterpolator)
+    );
   }
 
   _isUpdateDueToCurrentTransition(props: ViewportProps): boolean {
@@ -140,6 +147,16 @@ export default class TransitionManager {
       return this.state.interpolator.arePropsEqual(props, this.state.propsInTransition);
     }
     return false;
+  }
+
+  _normalizeNextProps(nextProps: ViewportProps, startProps: ViewportProps): ViewportProps {
+    const endProps = Object.assign({}, nextProps);
+    const {transitionInterpolator} = nextProps;
+    if (transitionInterpolator) {
+      const transitionDuration = transitionInterpolator.getDuration(startProps, nextProps);
+      Object.assign(endProps, {transitionDuration});
+    }
+    return endProps;
   }
 
   _shouldIgnoreViewportChange(currentProps: ViewportProps, nextProps: ViewportProps): boolean {

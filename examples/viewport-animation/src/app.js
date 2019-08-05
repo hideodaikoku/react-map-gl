@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import MapGL, {FlyToInterpolator} from 'react-map-gl';
+import MapGL, {FlyToInterpolator, TRANSITION_EVENTS} from 'react-map-gl';
 
 import ControlPanel from './control-panel';
 
@@ -28,7 +28,9 @@ export default class App extends Component {
       latitude,
       zoom: 11,
       transitionInterpolator: new FlyToInterpolator(),
-      transitionDuration: 3000
+      transitionDuration: 'auto',
+      transitionSpeed: 2,
+      transitionInterruption: TRANSITION_EVENTS.UPDATE
     });
   };
 

@@ -2,7 +2,7 @@
 import assert from '../assert';
 import TransitionInterpolator from './transition-interpolator';
 
-import {flyToViewport} from 'viewport-mercator-project';
+import {flyToViewport, getFlyToDuration} from 'viewport-mercator-project';
 import {isValid, getEndValueByShortestPath} from './transition-utils';
 import {lerp} from '../math-utils';
 
@@ -57,5 +57,13 @@ export default class ViewportFlyToInterpolator extends TransitionInterpolator {
     }
 
     return viewport;
+  }
+
+  getDuration(startProps: MapStateProps, endProps: MapStateProps) {
+    const {transitionDuration} = endProps;
+    if (typeof transitionDuration === 'string' && transitionDuration.toLowerCase() === 'auto') {
+      return getFlyToDuration(startProps, endProps, {speed: endProps.transitionSpeed});
+    }
+    return transitionDuration;
   }
 }
