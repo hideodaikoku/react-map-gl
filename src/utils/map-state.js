@@ -32,7 +32,6 @@ type ViewportProps = {
   maxPitch: number,
   minPitch: number,
   transitionDuration: number,
-  transitionSpeed: number,
   transitionEasing: number => number,
   transitionInterpolator: TransitionInterpolator,
   transitionInterruption: number
@@ -87,7 +86,6 @@ export default class MapState {
 
     /** Transition props */
     transitionDuration,
-    transitionSpeed,
     transitionEasing,
     transitionInterpolator,
     transitionInterruption,
@@ -124,7 +122,6 @@ export default class MapState {
       maxPitch,
       minPitch,
       transitionDuration,
-      transitionSpeed,
       transitionEasing,
       transitionInterpolator,
       transitionInterruption

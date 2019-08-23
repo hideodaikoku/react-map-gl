@@ -84,16 +84,16 @@ export default class TransitionManager {
     // Set this.props here as '_triggerTransition' calls '_updateViewport' that uses this.props.
     this.props = nextProps;
 
+    // update transitionDuration for `auto` mode
+    const endProps = this._normalizeNextProps(nextProps, currentProps);
+
     // NOTE: Be cautious re-ordering statements in this function.
-    if (this._shouldIgnoreViewportChange(currentProps, nextProps)) {
+    if (this._shouldIgnoreViewportChange(currentProps, endProps)) {
       return false;
     }
 
-    if (this._isTransitionEnabled(nextProps)) {
+    if (this._isTransitionEnabled(endProps)) {
       const startProps = Object.assign({}, currentProps);
-
-      // update transitionDuration for `auto` mode
-      const endProps = this._normalizeNextProps(nextProps, currentProps);
 
       if (this._isTransitionInProgress()) {
         currentProps.onTransitionInterrupt();
@@ -134,12 +134,7 @@ export default class TransitionManager {
   }
 
   _isTransitionEnabled(props: ViewportProps): boolean {
-    const {transitionDuration} = props;
-    return (
-      (transitionDuration > 0 ||
-        (typeof transitionDuration === 'string' && transitionDuration.toLowerCase() === 'auto')) &&
-      Boolean(props.transitionInterpolator)
-    );
+    return props.transitionDuration > 0 && Boolean(props.transitionInterpolator);
   }
 
   _isUpdateDueToCurrentTransition(props: ViewportProps): boolean {

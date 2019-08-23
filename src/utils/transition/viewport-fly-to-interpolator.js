@@ -2,7 +2,7 @@
 import assert from '../assert';
 import TransitionInterpolator from './transition-interpolator';
 
-import {flyToViewport, getFlyToDuration} from 'viewport-mercator-project';
+import {flyToViewport, getFlyToLength} from 'viewport-mercator-project';
 import {isValid, getEndValueByShortestPath} from './transition-utils';
 import {lerp} from '../math-utils';
 
@@ -11,6 +11,7 @@ import type {MapStateProps} from '../map-state';
 const VIEWPORT_TRANSITION_PROPS = ['longitude', 'latitude', 'zoom', 'bearing', 'pitch'];
 const REQUIRED_PROPS = ['latitude', 'longitude', 'zoom', 'width', 'height'];
 const LINEARLY_INTERPOLATED_PROPS = ['bearing', 'pitch'];
+const DEFAULT_SPEED = 1.2;
 
 /**
  * This class adapts mapbox-gl-js Map#flyTo animation so it can be used in
@@ -20,7 +21,22 @@ const LINEARLY_INTERPOLATED_PROPS = ['bearing', 'pitch'];
  * "Jarke J. van Wijk and Wim A.A. Nuij"
  */
 export default class ViewportFlyToInterpolator extends TransitionInterpolator {
+  speed: number;
   propNames = VIEWPORT_TRANSITION_PROPS;
+
+  /**
+   * @param opts {Object}
+   *  - opts.speed {Number} - transition speed, linearly affects the duration.
+   */
+  constructor(
+    opts: {
+      speed?: number
+    } = {}
+  ) {
+    super();
+
+    this.speed = opts.speed || DEFAULT_SPEED;
+  }
 
   initializeProps(startProps: MapStateProps, endProps: MapStateProps) {
     const startViewportProps = {};
@@ -59,10 +75,12 @@ export default class ViewportFlyToInterpolator extends TransitionInterpolator {
     return viewport;
   }
 
+  // computes the transition duration
   getDuration(startProps: MapStateProps, endProps: MapStateProps) {
     const {transitionDuration} = endProps;
-    if (typeof transitionDuration === 'string' && transitionDuration.toLowerCase() === 'auto') {
-      return getFlyToDuration(startProps, endProps, {speed: endProps.transitionSpeed});
+    if (typeof transitionDuration === 'string' && transitionDuration === 'auto') {
+      const length = getFlyToLength(startProps, endProps);
+      return 1000 * length / (this.speed);
     }
     return transitionDuration;
   }

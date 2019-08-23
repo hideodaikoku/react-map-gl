@@ -98,8 +98,4 @@ export default class LinearInterpolator extends TransitionInterpolator {
 
     return viewport;
   }
-
-  getDuration(startProps: MapStateProps, endProps: MapStateProps) {
-    return endProps.transitionDuration;
-  }
 }

@@ -40,8 +40,6 @@ const propTypes = Object.assign({}, StaticMap.propTypes, {
   /** Viewport transition **/
   // transition duration for viewport change
   transitionDuration: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  // transition speed for viewport change
-  transitionSpeed: PropTypes.number,
   // TransitionInterpolator instance, can be used to perform custom transitions.
   transitionInterpolator: PropTypes.object,
   // type of interruption of current transition on update.
@@ -169,7 +167,6 @@ export type InteractiveMapProps = StaticMapProps & {
   onWheel: Function,
 
   transitionDuration: number,
-  transitionSpeed: number,
   transitionInterpolator: any,
   transitionInterruption: number,
   transitionEasing: Function,
