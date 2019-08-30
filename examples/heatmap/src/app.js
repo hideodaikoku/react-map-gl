@@ -4,7 +4,7 @@ import MapGL from 'react-map-gl';
 import ControlPanel from './control-panel';
 import {json as requestJson} from 'd3-request';
 
-const MAPBOX_TOKEN = ''; // Set your mapbox token here
+const MAPBOX_TOKEN = 'pk.eyJ1IjoiaGlkZW9kYWlrb2t1IiwiYSI6ImNqem8yaGt4bDBhbGozbWpzbmhxN2hkNWsifQ.348jAJoCqP13m2a52qywlA'; // Set your mapbox token here
 const HEATMAP_SOURCE_ID = 'earthquakes-source';
 
 export default class App extends Component {
